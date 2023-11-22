@@ -1,6 +1,8 @@
 const db = require("../db/db-connection");
 const { multipleColumnSet } = require("../utils/common.utils");
 const Role = require("../utils/userRoles.utils");
+const userProgressModel = require("../models/userProgress.model");
+const HttpException = require("../utils/HttpException.utils");
 
 const query = db.query;
 
@@ -53,9 +55,23 @@ class UserModel {
       role,
       age,
     ]);
-    const affectedRows = result ? result.affectedRows : 0;
 
-    return affectedRows;
+    const userId = result.insertId;
+
+    const userProgress = await userProgressModel.createUserProgress(userId);
+
+    const userAffectedRows = result ? result.affectedRows : 0;
+
+    const newUserData = {
+      user: { ...userAffectedRows },
+      userProgress: { userProgress },
+    };
+
+    if (!userProgress && !userAffectedRows) {
+      throw new HttpException(500, "Something went wrong");
+    }
+
+    return newUserData;
   };
 
   update = async (params, id) => {
