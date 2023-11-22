@@ -6,8 +6,8 @@ const cors = require("cors");
 const HttpException = require("./utils/HttpException.utils");
 const errorMiddleware = require("./middleware/error. middleware");
 const userRouter = require("./routes/user.route");
+const userProgressRouter = require("./routes/userProgress.route");
 const questionRouter = require("./routes/question.route");
-const dbConnection = require("./db/db-connection");
 
 //Init express
 const app = express();
@@ -27,6 +27,7 @@ app.options("*", cors());
 const port = Number(process.env.PORT || 3331);
 
 app.use(`/api/v1/users`, userRouter);
+app.use(`/api/v1/user-progress`, userProgressRouter);
 app.use(`/api/v1/questions`, questionRouter);
 
 // 404 error
