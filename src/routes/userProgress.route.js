@@ -5,19 +5,30 @@ const auth = require("../middleware/auth.middleware");
 const awaitHandlerFactory = require("../middleware/awaitHandlerFactory.middleware");
 
 // const {
-//     updateUserProgressSchema,
+//   updateUserProgressSchema,
 // } = require("../middleware/validators/userProgressValidator.middleware");
 
+router.post(
+  "/id/:id",
+  auth(),
+  awaitHandlerFactory(userProgressController.createUserProgress)
+);
 router.get(
-  "/:id",
+  "/id/:id",
   auth(),
   awaitHandlerFactory(userProgressController.getUserProgress)
 );
 
-// router.put(
-//   "/update",
-//   auth(),
-//   awaitHandlerFactory(userProgressController.updateUserProgress)
-// );
+router.patch(
+  "/id/:id",
+  auth(),
+  // updateUserProgressSchema,
+  awaitHandlerFactory(userProgressController.updateUserProgress)
+);
+router.delete(
+  "/id/:id",
+  auth(),
+  awaitHandlerFactory(userProgressController.deleteUserProgress)
+);
 
 module.exports = router;
