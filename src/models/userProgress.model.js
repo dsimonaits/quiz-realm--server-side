@@ -6,7 +6,7 @@ const query = db.query;
 class UserProgressModel {
   tableName = "user_progress";
 
-  createUserProgress = async (userId) => {
+  create = async (userId) => {
     const defaultProgress = {
       user_id: userId,
       quizzes_played: 0,
@@ -19,19 +19,48 @@ class UserProgressModel {
 
     const { columnSet, values } = multipleColumnSet(defaultProgress);
 
-    const sql = `INSERT INTO ${this.tableName} SET ${columnSet}`;
+    const sql = `INSERT INTO ${this.tableName} (${columnSet}) VALUES (${values
+      .map((_, index) => `$${index + 1}`)
+      .join(", ")}) RETURNING *`;
 
-    const result = await db.query(sql, [...values]);
+    const result = await query(sql, values);
 
     return result;
   };
 
-  getUserProgress = async (id) => {
+  get = async (id) => {
     const sql = `SELECT * FROM ${this.tableName} WHERE user_id = ${id} `;
 
-    const result = await db.query(sql, [id]);
+    const result = await db.query(sql);
 
     return result;
+  };
+
+  update = async (params, id) => {
+    const { columnSet, values } = multipleColumnSet(params);
+
+    const setClauses = columnSet
+      .split(", ")
+      .map((col, index) => `${col} = $${index + 1}`)
+      .join(", ");
+
+    const updatedColumns = columnSet.split(", ").map((col) => col.trim());
+
+    const sql = `UPDATE ${
+      this.tableName
+    } SET ${setClauses} WHERE user_id = ${id} RETURNING ${updatedColumns.join(
+      ", "
+    )}`;
+
+    const result = await db.query(sql, values);
+
+    return result;
+  };
+
+  delete = async (id) => {
+    const sql = `DELETE FROM ${this.tableName}
+        WHERE user_id = ${id}`;
+    await query(sql);
   };
 }
 
