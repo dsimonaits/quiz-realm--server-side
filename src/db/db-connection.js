@@ -1,63 +1,67 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const mysql2 = require("mysql2");
+const { Pool } = require("pg");
 
 class DBConnection {
   constructor() {
-    this.db = mysql2.createPool({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      port: process.env.DB_PORT,
-      database: process.env.DB_DATABASE,
-    });
-
+    const env = process.env.NODE_ENV || "development";
+    const config = {
+      development: {
+        host: process.env.DEV_DB_HOST,
+        user: process.env.DEV_DB_USER,
+        port: process.env.DEV_DB_PORT,
+        database: process.env.DEV_DB_DATABASE,
+        password: process.env.DEV_DB_PASSWORD,
+        ssl: {
+          rejectUnauthorized: false, // Set to false if using self-signed certificates
+        },
+      },
+      production: {
+        host: process.env.PROD_DB_HOST,
+        user: process.env.PROD_DB_USER,
+        port: process.env.PROD_DB_PORT,
+        database: process.env.PROD_DB_DATABASE,
+        password: process.env.PROD_DB_PASSWORD,
+        ssl: {
+          rejectUnauthorized: false, // Set to false if using self-signed certificates
+        },
+      },
+    };
+    this.db = new Pool(config[env]);
     // Explicitly wait for the connection to be established before calling checkConnection
-    this.db.getConnection((err, connection) => {
+    this.db.connect((err, client, release) => {
       if (err) {
         console.error("Error establishing database connection:", err.message);
         return;
       }
 
       console.log("Database connection established");
-      connection.release(); // Release the connection after establishing it
+      release();
       this.checkConnection();
     });
   }
 
   checkConnection() {
     console.log("Database connection was released");
-    // ... rest of the checkConnection method
   }
 
   query = async (sql, values) => {
     return new Promise((resolve, reject) => {
-      const callback = (error, result) => {
-        if (error) {
-          reject(error);
+      // execute will internally call prepare and query
+      this.db.query(sql, values, (err, result) => {
+        if (err) {
+          reject(err);
           return;
         }
-        resolve(result);
-      };
-      // execute will internally call prepare and query
-      this.db.execute(sql, values, callback);
+        resolve(result.rows);
+      });
     }).catch((err) => {
-      const mysqlErrorList = Object.keys(HttpStatusCodes);
-      // convert mysql errors which in the mysqlErrorList list to http status code
-      err.status = mysqlErrorList.includes(err.code)
-        ? HttpStatusCodes[err.code]
-        : err.status;
-
+      // Handle errors
       throw err;
     });
   };
 }
-
-// like ENUM
-const HttpStatusCodes = Object.freeze({
-  ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: 422,
-  ER_DUP_ENTRY: 409,
-});
 
 const dbConnection = new DBConnection();
 
