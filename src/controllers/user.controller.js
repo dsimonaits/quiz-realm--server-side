@@ -4,51 +4,11 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const userModel = require("../models/user.model");
+const userProgressModel = require("../models/userProgress.model");
 dotenv.config();
 
 class UserController {
-  getAllUsers = async (req, res, next) => {
-    let userList = await UserModel.find();
-    if (!userList.length) {
-      throw new HttpException(404, "Users not found");
-    }
-
-    userList = userList.map((user) => {
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
-    });
-
-    res.send(userList);
-  };
-
-  getUserById = async (req, res, next) => {
-    const user = await UserModel.findOne({ id: req.params.id });
-    if (!user) {
-      throw new HttpException(404, "User not found");
-    }
-
-    const { password, ...userWithoutPassword } = user;
-
-    res.send(userWithoutPassword);
-  };
-
-  getUserByuserName = async (req, res, next) => {
-    const user = await UserModel.findOne({ username: req.params.username });
-    if (!user) {
-      throw new HttpException(404, "User not found");
-    }
-
-    const { password, ...userWithoutPassword } = user;
-
-    res.send(userWithoutPassword);
-  };
-
-  getCurrentUser = async (req, res, next) => {
-    const { password, ...userWithoutPassword } = req.currentUser;
-
-    res.send(userWithoutPassword);
-  };
-
   createUser = async (req, res, next) => {
     this.checkValidation(req);
 
@@ -60,9 +20,12 @@ class UserController {
       throw new HttpException(500, "Something went wrong");
     }
 
-    res.json({
+    userProgressModel.create(result.id);
+
+    res.status(201).json({
       code: 201,
       message: "User was created successfully",
+      result,
     });
   };
 
@@ -79,28 +42,18 @@ class UserController {
       throw new HttpException(404, "Something went wrong");
     }
 
-    const { affectedRows, changedRows, info } = result;
-
-    const message = !affectedRows
-      ? "User not found"
-      : affectedRows && changedRows
-      ? "User updated successfully"
-      : "Updated faild";
-
-    res.send({ message, info });
+    res.status(200).json({ result });
   };
 
   deleteUser = async (req, res, next) => {
     const result = await UserModel.delete(req.params.id);
-    if (!result) {
-      throw new HttpException(404, "User not found");
-    }
-    res.send("User has been deleted");
+    console.log(result);
+
+    res.status(200).json({ message: "User has been deleted", result });
   };
 
   userLogin = async (req, res, next) => {
     this.checkValidation(req);
-
     const { email, password: pass } = req.body;
 
     const user = await UserModel.findOne({ email });
