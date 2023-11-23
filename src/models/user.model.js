@@ -7,28 +7,15 @@ const HttpException = require("../utils/HttpException.utils");
 const query = db.query;
 
 class UserModel {
-  tableName = "user";
-
-  find = async (params = {}) => {
-    let sql = `SELECT * FROM ${this.tableName}`;
-
-    if (!Object.keys(params).length) {
-      return await query(sql);
-    }
-
-    const { columnSet, values } = multipleColumnSet(params);
-    sql += ` WHERE ${columnSet}`;
-
-    return await query(sql, [...values]);
-  };
+  tableName = "users";
 
   findOne = async (params) => {
     const { columnSet, values } = multipleColumnSet(params);
 
     const sql = `SELECT * FROM ${this.tableName}
-        WHERE ${columnSet}`;
+        WHERE ${columnSet} = $1 `;
 
-    const result = await query(sql, [...values]);
+    const result = await query(sql, values);
 
     // return back the first row (user)
     return result[0];
@@ -43,8 +30,14 @@ class UserModel {
     role = Role.SuperUser,
     age = 0,
   }) => {
+    const userExist = await this.findOne({ email });
+
+    if (userExist) {
+      throw new HttpException(401, "User already exists");
+    }
+
     const sql = `INSERT INTO ${this.tableName}
-        (username, password, first_name, last_name, email, role, age) VALUES (?,?,?,?,?,?,?)`;
+        (username, password, first_name, last_name, email, role, age) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`;
 
     const result = await query(sql, [
       username,
@@ -56,41 +49,43 @@ class UserModel {
       age,
     ]);
 
-    const userId = result.insertId;
-
-    const userProgress = await userProgressModel.createUserProgress(userId);
-
-    const userAffectedRows = result ? result.affectedRows : 0;
-
-    const newUserData = {
-      user: { ...userAffectedRows },
-      userProgress: { userProgress },
-    };
-
-    if (!userProgress && !userAffectedRows) {
+    if (!result) {
       throw new HttpException(500, "Something went wrong");
     }
 
-    return newUserData;
+    return result[0];
   };
 
   update = async (params, id) => {
     const { columnSet, values } = multipleColumnSet(params);
 
-    const sql = `UPDATE user SET ${columnSet} WHERE id = ?`;
+    const setClauses = columnSet
+      .split(", ")
+      .map((col, index) => `${col} = $${index + 1}`)
+      .join(", ");
 
-    const result = await query(sql, [...values, id]);
+    const updatedColumns = columnSet.split(", ").map((col) => col.trim());
 
-    return result;
+    console.log(setClauses);
+    const sql = `UPDATE ${
+      this.tableName
+    } SET ${setClauses} WHERE id = ${id} RETURNING ${updatedColumns.join(
+      ", "
+    )}`;
+
+    console.log(sql);
+
+    const result = await query(sql, [...values]);
+
+    return result[0];
   };
 
   delete = async (id) => {
     const sql = `DELETE FROM ${this.tableName}
-        WHERE id = ?`;
-    const result = await query(sql, [id]);
-    const affectedRows = result ? result.affectedRows : 0;
+        WHERE id = ${id} RETURNING ${id}`;
+    const result = await query(sql);
 
-    return affectedRows;
+    return result[0];
   };
 }
 
