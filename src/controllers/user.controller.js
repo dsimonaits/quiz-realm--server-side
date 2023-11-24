@@ -79,6 +79,16 @@ class UserController {
     res.send({ ...userWithoutPassword, token });
   };
 
+  currentUser = async (req, res, next) => {
+    // const { _id } = req.user;
+
+    console.log(req);
+
+    const user = await currentUsers(_id);
+
+    res.json(responseOk("Success", 201, "Current user", user));
+  };
+
   checkValidation = (req) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
