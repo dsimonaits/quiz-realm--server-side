@@ -8,21 +8,21 @@ class DBConnection {
     const env = process.env.NODE_ENV || "development";
     const config = {
       development: {
-        host: process.env.DEV_DB_HOST,
-        user: process.env.DEV_DB_USER,
-        port: process.env.DEV_DB_PORT,
-        database: process.env.DEV_DB_DATABASE,
-        password: process.env.DEV_DB_PASSWORD,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        port: process.env.DB_PORT,
+        database: process.env.DB_DATABASE,
+        password: process.env.DB_PASSWORD,
         ssl: {
           rejectUnauthorized: false, // Set to false if using self-signed certificates
         },
       },
       production: {
-        host: process.env.PROD_DB_HOST,
-        user: process.env.PROD_DB_USER,
-        port: process.env.PROD_DB_PORT,
-        database: process.env.PROD_DB_DATABASE,
-        password: process.env.PROD_DB_PASSWORD,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        port: process.env.DB_PORT,
+        database: process.env.DB_DATABASE,
+        password: process.env.DB_PASSWORD,
         ssl: {
           rejectUnauthorized: false, // Set to false if using self-signed certificates
         },
