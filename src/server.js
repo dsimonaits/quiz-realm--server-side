@@ -28,8 +28,7 @@ app.use(express.json());
 // Enable pre-flight
 const allowedOrigins = ["http://localhost:5173", process.env.CLIENT_URL];
 
-app.options(
-  "*",
+app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
