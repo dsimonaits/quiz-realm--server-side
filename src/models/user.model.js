@@ -13,17 +13,7 @@ class UserModel {
     const { columnSet, values } = multipleColumnSet(params);
 
     const sql = `SELECT * FROM ${this.tableName}
-        WHERE ${columnSet} = $1 `;
-
-    const result = await query(sql, values);
-
-    // return back the first row (user)
-    return result[0];
-  };
-
-  findCurrent = async (id) => {
-    const sql = `SELECT * FROM ${this.tableName}
-        WHERE id = ${id} RETURNING *`;
+        WHERE ${columnSet} = $1`;
 
     const result = await query(sql, values);
 
@@ -76,14 +66,11 @@ class UserModel {
 
     const updatedColumns = columnSet.split(", ").map((col) => col.trim());
 
-    console.log(setClauses);
     const sql = `UPDATE ${
       this.tableName
     } SET ${setClauses} WHERE id = ${id} RETURNING ${updatedColumns.join(
       ", "
     )}`;
-
-    console.log(sql);
 
     const result = await query(sql, [...values]);
 
