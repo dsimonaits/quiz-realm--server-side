@@ -21,6 +21,16 @@ class UserModel {
     return result[0];
   };
 
+  findCurrent = async (id) => {
+    const sql = `SELECT * FROM ${this.tableName}
+        WHERE id = ${id} RETURNING *`;
+
+    const result = await query(sql, values);
+
+    // return back the first row (user)
+    return result[0];
+  };
+
   create = async ({
     username,
     password,
