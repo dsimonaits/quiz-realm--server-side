@@ -7,6 +7,15 @@ const dotenv = require("dotenv");
 const userProgressModel = require("../models/userProgress.model");
 dotenv.config();
 
+const createToken = (id) => {
+  const secretKey = process.env.SECRET_JWT || "";
+  const token = jwt.sign({ user_id: id.toString() }, secretKey, {
+    expiresIn: "24h",
+  });
+
+  return token;
+};
+
 class UserController {
   createUser = async (req, res, next) => {
     this.checkValidation(req);
@@ -67,10 +76,7 @@ class UserController {
     }
 
     // user matched!
-    const secretKey = process.env.SECRET_JWT || "";
-    const token = jwt.sign({ user_id: user.id.toString() }, secretKey, {
-      expiresIn: "24h",
-    });
+    const token = createToken(user.id);
 
     const { password, ...userWithoutPassword } = user;
 
@@ -84,7 +90,9 @@ class UserController {
 
     const { password, ...userWithoutPassword } = user;
 
-    res.status(200).json({ userWithoutPassword });
+    const token = createToken(user.id);
+
+    res.status(200).json({ userWithoutPassword, token });
   };
 
   checkValidation = (req) => {
