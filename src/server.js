@@ -26,7 +26,15 @@ app.use(express.json());
 // enabling cors for all requests by using cors middleware
 // app.use(cors());
 // Enable pre-flight
-app.options("*", cors());
+const allowedOrigins = ["http://localhost:5173", process.env.CLIENT_URL];
+
+app.options(
+  "*",
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 const port = Number(process.env.PORT || 3331);
 
