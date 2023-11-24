@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node --inspect src/server.js",
     "dev": "nodemon --inspect src/server.js"
   },
   "author": "Deniss Simonaits",
