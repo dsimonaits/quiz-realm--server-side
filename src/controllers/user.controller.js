@@ -4,7 +4,6 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const userModel = require("../models/user.model");
 const userProgressModel = require("../models/userProgress.model");
 dotenv.config();
 
@@ -47,7 +46,6 @@ class UserController {
 
   deleteUser = async (req, res, next) => {
     const result = await UserModel.delete(req.params.id);
-    console.log(result);
 
     res.status(200).json({ message: "User has been deleted", result });
   };
@@ -82,11 +80,11 @@ class UserController {
   currentUser = async (req, res, next) => {
     const { id } = req.currentUser;
 
-    const user = await userModel.findCurrent(id);
+    const user = await UserModel.findOne({ id });
 
     const { password, ...userWithoutPassword } = user;
 
-    res.json(responseOk("Success", 201, "Current user", userWithoutPassword));
+    res.status(200).json({ userWithoutPassword });
   };
 
   checkValidation = (req) => {
