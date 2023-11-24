@@ -80,13 +80,13 @@ class UserController {
   };
 
   currentUser = async (req, res, next) => {
-    // const { _id } = req.user;
+    const { id } = req.currentUser;
 
-    console.log(req);
+    const user = await userModel.findCurrent(id);
 
-    const user = await currentUsers(_id);
+    const { password, ...userWithoutPassword } = user;
 
-    res.json(responseOk("Success", 201, "Current user", user));
+    res.json(responseOk("Success", 201, "Current user", userWithoutPassword));
   };
 
   checkValidation = (req) => {
