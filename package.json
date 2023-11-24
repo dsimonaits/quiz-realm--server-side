@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "node --inspect src/server.js",
+    "start": "node --inspect ./server.js",
     "dev": "nodemon --inspect"
   },
   "author": "Deniss Simonaits",
