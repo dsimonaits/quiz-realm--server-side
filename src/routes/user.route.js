@@ -11,11 +11,6 @@ const {
   validateLogin,
 } = require("../middleware/validators/userValidator.middleware");
 
-router.get(
-  "/username/:username",
-  auth(),
-  awaitHandlerFactory(userController.getUserByUserName)
-); // localhost:3000/api/v1/users/usersname/julia
 router.get("/whoami", auth(), awaitHandlerFactory(userController.currentUser)); // localhost:3000/api/v1/users/whoami
 router.post(
   "/",
