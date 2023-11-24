@@ -19,6 +19,7 @@ const auth = (...roles) => {
 
       // Verify Token
       const decoded = jwt.verify(token, secretKey);
+
       const user = await UserModel.findOne({ id: decoded.user_id });
 
       if (!user) {
