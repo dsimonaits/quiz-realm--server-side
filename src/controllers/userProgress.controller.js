@@ -7,7 +7,6 @@ class UserProgressController {
     const { id } = req.params;
 
     let userProgressExists = await UserProgressModel.get(id);
-    console.log(userProgressExists);
 
     if (userProgressExists.length > 0) {
       throw new HttpException(404, "UserProgress already exists");
