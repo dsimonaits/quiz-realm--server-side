@@ -2,6 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const logger = require("morgan");
 //extra
 const HttpException = require("./utils/HttpException.utils");
 const errorMiddleware = require("./middleware/error. middleware");
@@ -14,6 +15,9 @@ const app = express();
 
 //Init environment
 dotenv.config();
+
+const formatsLogger = app.get("env") === "development" ? "dev" : "short";
+app.use(logger(formatsLogger));
 
 // parse requests of content-type: application/json
 // parses incoming requests with JSON payloads
