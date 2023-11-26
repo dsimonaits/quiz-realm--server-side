@@ -37,7 +37,7 @@ class UserModel {
     }
 
     const sql = `INSERT INTO ${this.tableName}
-        (username, password, first_name, last_name, email, role, age) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`;
+        (username, password, first_name, last_name, email, role, age) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
 
     const result = await query(sql, [
       username,
