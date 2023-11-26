@@ -37,7 +37,7 @@ class UserController {
     res.status(201).json({
       code: 201,
       message: "User was created successfully",
-      user: result,
+      user: userWithoutPassword,
       token,
     });
   };
