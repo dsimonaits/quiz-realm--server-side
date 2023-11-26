@@ -20,6 +20,7 @@ app.use(logger(formatsLogger));
 const allowedOrigins = [
   "http://localhost:5173",
   "https://dsimonaits.github.io/quiz-realm/auth",
+  "https://dsimonaits.github.io",
   process.env.CLIENT_URL,
 ];
 
