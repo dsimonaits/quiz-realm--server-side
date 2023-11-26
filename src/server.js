@@ -17,7 +17,11 @@ dotenv.config();
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 
-const allowedOrigins = ["http://localhost:5173", process.env.CLIENT_URL];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://dsimonaits.github.io/quiz-realm/auth",
+  process.env.CLIENT_URL,
+];
 
 app.use(
   cors({
