@@ -30,10 +30,15 @@ class UserController {
 
     userProgressModel.create(result.id);
 
+    const token = createToken(result.id);
+
+    const { password, ...userWithoutPassword } = user;
+
     res.status(201).json({
       code: 201,
       message: "User was created successfully",
       result,
+      token,
     });
   };
 
