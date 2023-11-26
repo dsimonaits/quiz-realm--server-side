@@ -85,7 +85,7 @@ class UserController {
 
     const { password, ...userWithoutPassword } = user;
 
-    res.send({ ...userWithoutPassword, token });
+    res.send({ user: userWithoutPassword, token });
   };
 
   currentUser = async (req, res, next) => {
@@ -97,7 +97,7 @@ class UserController {
 
     const token = createToken(user.id);
 
-    res.status(200).json({ userWithoutPassword, token });
+    res.status(200).json({ user: userWithoutPassword, token });
   };
 
   checkValidation = (req) => {
