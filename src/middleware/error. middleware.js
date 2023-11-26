@@ -9,7 +9,7 @@ function errorMiddleware(error, req, res, next) {
   error = {
     type: "error",
     status,
-    message,
+    errorMessage,
     ...(data && data),
   };
 
