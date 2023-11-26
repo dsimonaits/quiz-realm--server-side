@@ -32,12 +32,12 @@ class UserController {
 
     const token = createToken(result.id);
 
-    const { password, ...userWithoutPassword } = user;
+    const { password, ...userWithoutPassword } = result;
 
     res.status(201).json({
       code: 201,
       message: "User was created successfully",
-      result,
+      user: result,
       token,
     });
   };
