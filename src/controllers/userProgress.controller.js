@@ -37,7 +37,12 @@ class UserProgressController {
       throw new HttpException(404, "UserProgress not found");
     }
 
-    res.status(201).json(newUserProgress[0]);
+    res
+      .status(201)
+      .json({
+        message: "UserProgress successfully updated",
+        userProgress: newUserProgress[0],
+      });
   };
 
   deleteUserProgress = async (req, res, next) => {
