@@ -31,18 +31,16 @@ class UserProgressController {
   updateUserProgress = async (req, res, next) => {
     const { id } = req.params;
 
-    let newUserProgress = await UserProgressModel.updates(req.body, id);
+    let newUserProgress = await UserProgressModel.update(req.body, id);
 
     if (!newUserProgress) {
       throw new HttpException(404, "UserProgress not found");
     }
 
-    res
-      .status(201)
-      .json({
-        message: "UserProgress successfully updated",
-        userProgress: newUserProgress[0],
-      });
+    res.status(201).json({
+      message: "UserProgress successfully updated",
+      userProgress: newUserProgress[0],
+    });
   };
 
   deleteUserProgress = async (req, res, next) => {
