@@ -28,7 +28,6 @@ class UserModel {
     last_name,
     email,
     role = Role.SuperUser,
-    age = 0,
   }) => {
     const userExist = await this.findOne({ email });
 
@@ -37,7 +36,7 @@ class UserModel {
     }
 
     const sql = `INSERT INTO ${this.tableName}
-        (username, password, first_name, last_name, email, role, age) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
+        (username, password, first_name, last_name, email, role) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
 
     const result = await query(sql, [
       username,
@@ -46,7 +45,6 @@ class UserModel {
       last_name,
       email,
       role,
-      age,
     ]);
 
     if (!result) {
