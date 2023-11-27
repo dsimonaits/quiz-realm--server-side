@@ -45,7 +45,6 @@ exports.createUserSchema = [
     .withMessage(
       "confirm_password field must have the same value as the password field"
     ),
-  body("age").optional().isNumeric().withMessage("Must be a number"),
 ];
 
 exports.updateUserSchema = [
@@ -89,7 +88,6 @@ exports.updateUserSchema = [
     .withMessage(
       "confirm_password field must have the same value as the password field"
     ),
-  body("age").optional().isNumeric().withMessage("Must be a number"),
   body()
     .custom((value) => {
       return !!Object.keys(value).length;
@@ -105,7 +103,6 @@ exports.updateUserSchema = [
         "role",
         "first_name",
         "last_name",
-        "age",
       ];
       return updates.every((update) => allowUpdates.includes(update));
     })
