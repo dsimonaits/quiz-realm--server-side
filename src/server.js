@@ -39,8 +39,9 @@ app.use(`/api/v1/users`, userRouter);
 app.use(`/api/v1/user-progress`, userProgressRouter);
 app.use(`/api/v1/questions`, questionRouter);
 
-app.use((req, res) => {
-  res.status(404).json({ message: "Page not found" });
+app.all("*", (req, res, next) => {
+  const err = new HttpException(404, "Endpoint Not Found");
+  next(err);
 });
 
 app.use(errorMiddleware);
