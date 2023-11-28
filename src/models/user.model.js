@@ -72,6 +72,8 @@ class UserModel {
 
     const result = await query(sql, [...values]);
 
+    console.log(result);
+
     return result[0];
   };
 
