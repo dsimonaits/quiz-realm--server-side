@@ -55,7 +55,9 @@ class UserController {
       throw new HttpException(404, "Something went wrong");
     }
 
-    res.status(200).json({ result });
+    console.log(result);
+
+    res.status(200).json(result);
   };
 
   deleteUser = async (req, res, next) => {
