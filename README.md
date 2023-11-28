@@ -13,7 +13,6 @@ QuizRealm is a web application that allows users to participate in quizzes, trac
 - User progress tracking
 - Database integration (PostgreSQL)
 - RESTful API endpoints for frontend communication
-- ...
 
 ## Technologies Used
 
@@ -21,4 +20,3 @@ QuizRealm is a web application that allows users to participate in quizzes, trac
 - Express.js
 - PostgreSQL
 - JWT for authentication
-- ...
