@@ -55,8 +55,6 @@ class UserController {
       throw new HttpException(404, "Something went wrong");
     }
 
-    console.log(result);
-
     res.status(200).json(result);
   };
 
