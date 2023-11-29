@@ -5,6 +5,17 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 class DefaultQuestionController {
+  getQuestions = async (req, res, next) => {
+    this.checkValidation(req);
+
+    const questions = await defaultQuestionModel.getQuestions();
+
+    res.status(201).json({
+      code: 201,
+      questions: questions,
+    });
+  };
+
   addQuestions = async (req, res, next) => {
     this.checkValidation(req);
     try {
