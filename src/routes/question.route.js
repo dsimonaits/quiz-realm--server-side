@@ -16,5 +16,17 @@ router.post(
   createDefaultQuestionSchema,
   awaitHandlerFactory(questionController.addQuestions)
 );
+router.get(
+  "/user/id/:id",
+  auth(),
+  awaitHandlerFactory(questionController.getUserQuestions)
+);
+
+router.post(
+  "/add-user-question/id/:id",
+  auth(),
+  createDefaultQuestionSchema,
+  awaitHandlerFactory(questionController.addUserQuestions)
+);
 
 module.exports = router;
