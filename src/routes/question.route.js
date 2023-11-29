@@ -8,6 +8,8 @@ const {
   createDefaultQuestionSchema,
 } = require("../middleware/validators/defaultQuestionValidator.middleware.js");
 
+router.get("/", auth(), awaitHandlerFactory(questionController.getQuestions));
+
 router.post(
   "/add-default-question",
   auth(),
