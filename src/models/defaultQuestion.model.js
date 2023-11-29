@@ -5,6 +5,16 @@ const query = db.query;
 class DefaultQuestionModel {
   tableName = "default_questions";
 
+  getQuestions = async () => {
+    const sql = `SELECT * FROM  ${this.tableName}`;
+
+    const result = await query(sql);
+
+    console.log(result);
+
+    return result;
+  };
+
   insertQuestion = async (question) => {
     const {
       category,
@@ -14,7 +24,7 @@ class DefaultQuestionModel {
     } = question;
 
     const sql = `INSERT INTO ${this.tableName} (category, topic, question, answers)
-                 VALUES (?, ?, ?, ?)`;
+                 VALUES ($1, $2, $3, $4) RETURNING id`;
 
     const result = await query(sql, [
       category,
@@ -22,8 +32,8 @@ class DefaultQuestionModel {
       questionText,
       JSON.stringify({ answer, fakeAnswer1, fakeAnswer2, fakeAnswer3 }),
     ]);
-
-    return result.insertId; // Return the ID of the inserted question
+    console.log(result);
+    return result[0].id;
   };
 
   insertQuestions = async (questions) => {
