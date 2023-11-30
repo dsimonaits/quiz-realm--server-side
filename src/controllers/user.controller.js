@@ -91,13 +91,16 @@ class UserController {
   currentUser = async (req, res, next) => {
     const user = req.currentUser;
 
+    const token = createToken(user.id);
+
     const { password, ...userWithoutPassword } = user;
 
-    res.status(200).json({ user: userWithoutPassword });
+    res.status(200).json({ user: userWithoutPassword, token });
   };
 
   checkValidation = (req) => {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       throw new HttpException(400, "Validation failed", errors);
     }
