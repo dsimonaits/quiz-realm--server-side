@@ -16,7 +16,6 @@ const auth = (...roles) => {
 
       const token = authHeader.replace(bearer, "");
       const secretKey = process.env.SECRET_JWT || "";
-
       // Verify Token
       const decoded = jwt.verify(token, secretKey);
 
@@ -41,6 +40,15 @@ const auth = (...roles) => {
       next();
     } catch (e) {
       e.status = 401;
+
+      if ((e.message = "jwt expired")) {
+        const e = {
+          status: 401,
+          message: "Your session has expired. Please login",
+        };
+        next(e);
+      }
+
       next(e);
     }
   };
