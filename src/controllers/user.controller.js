@@ -109,7 +109,7 @@ class UserController {
   // hash password if it exists
   hashPassword = async (req) => {
     if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password);
+      req.body.password = await bcrypt.hash(req.body.password, 8);
     }
   };
 }
